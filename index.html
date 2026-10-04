@@ -1,14 +1,322 @@
-<!DOCTYPE html><html lang="en">
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rosie AI</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosie AI - Desktop App UI with User Profile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        roseGold: {
+                            light: '#ffd1dc',
+                            DEFAULT: '#e0a9a7',
+                            dark: '#b76e79',
+                        },
+                        neonPink: '#ff2a85',
+                        appBg: '#050608',
+                        windowBg: '#13151c',
+                        sidebarBg: '#0f1015',
+                        cardBg: 'rgba(25, 27, 38, 0.75)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050608;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glass-window {
+            background: rgba(15, 17, 24, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 42, 133, 0.18);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 42, 133, 0.1);
+        }
+        .glass-pill {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-pill:hover {
+            background: rgba(255, 42, 133, 0.12);
+            border-color: rgba(255, 42, 133, 0.3);
+        }
+        .rose-gradient-bg {
+            background: linear-gradient(135deg, #b76e79 0%, #ff2a85 100%);
+        }
+        .rose-gradient-text {
+            background: linear-gradient(135deg, #ffd1dc 0%, #ff2a85 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff2a85;
+        }
+    </style>
 </head>
-<body><div class="container">  <div class="header">
-    🌸 Rosie AI
-  </div>  <div id="chat"></div>  <div class="input-area">
-    <input id="message" placeholder="Message Rosie..." />
-    <button onclick="sendMessage()">Send</button>
-  </div></div><script src="app.js"></script></body>
-</html>
+<body class="min-h-screen flex items-center justify-center p-0 sm:p-6 relative selection:bg-neonPink selection:text-white">
+
+    <!-- Background Ambient Glows -->
+    <div class="absolute top-10 left-10 w-96 h-96 bg-neonPink/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[500px] h-[500px] bg-roseGold-dark/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Main Desktop Window Container -->
+    <div class="w-full max-w-6xl h-screen sm:h-[820px] glass-window sm:rounded-2xl flex flex-col overflow-hidden relative z-10">
+        
+        <!-- Top Window Titlebar -->
+        <div class="h-11 px-4 bg-black/40 border-b border-white/10 flex items-center justify-between select-none flex-shrink-0">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 cursor-pointer transition-colors" title="Close" onclick="showNotification('Window minimized to dock')"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 cursor-pointer transition-colors" title="Minimize"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 cursor-pointer transition-colors" title="Maximize"></div>
+                <span class="ml-4 text-xs font-medium text-gray-400 tracking-wider">Rosie AI Studio v4.5</span>
+            </div>
+            
+            <div class="flex items-center space-x-3 text-gray-400">
+                <button onclick="toggleSound()" id="soundBtn" class="hover:text-white transition-colors p-1" title="Toggle Sound">
+                    <i id="soundIcon" data-lucide="volume-2" class="w-4 h-4"></i>
+                </button>
+                <button onclick="openProfileModal()" class="hover:text-neonPink transition-colors p-1 flex items-center gap-1 text-xs" title="Edit Profile">
+                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                    <span id="headerUserName" class="hidden sm:inline">Alex Rivera</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Inner Application Body (Sidebar + Chat Area) -->
+        <div class="flex-1 flex overflow-hidden">
+            
+            <!-- LEFT SIDEBAR -->
+            <div class="w-64 bg-[#0d0e14] border-r border-white/10 flex flex-col justify-between hidden md:flex flex-shrink-0 select-none">
+                
+                <!-- Top Brand & Navigation -->
+                <div class="p-5">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="w-9 h-9 rounded-xl rose-gradient-bg flex items-center justify-center text-white font-bold shadow-lg shadow-neonPink/30">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <span class="text-lg font-bold tracking-tight rose-gradient-text">Rosie AI</span>
+                    </div>
+
+                    <div class="space-y-1 text-sm">
+                        <a href="#" onclick="switchNav(this, 'Dashboard')" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                            <span>Dashboard</span>
+                        </a>
+
+                        <!-- Chat History Section -->
+                        <div class="pt-2">
+                            <div class="flex items-center justify-between px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <span>Chat History</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                            </div>
+                            
+                            <div class="mt-1 space-y-1 pl-2">
+                                <a href="#" onclick="switchChatSession(this, 'Q4 Strategy Analysis', 'Last active: 2 min ago')" class="flex items-center space-x-3 px-3 py-2 rounded-xl bg-neonPink/15 text-neonPink font-medium text-xs border border-neonPink/30 transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-neonPink"></span>
+                                    <span class="truncate">Q4 Planning</span>
+                                </a>
+                                <a href="#" onclick="switchChatSession(this, 'Lead Generation Framework', 'Last active: 1 hour ago')" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-xs transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+                                    <span class="truncate">Lead Gen</span>
+                                </a>
+                                <a href="#" onclick="switchChatSession(this, 'Competitor Market Analysis', 'Last active: Yesterday')" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-xs transition-all">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+                                    <span class="truncate">Competitor Analysis</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom User Card / Profile Trigger & Settings -->
+                <div class="p-4 border-t border-white/10 space-y-3">
+                    <!-- User Profile Quick Bar -->
+                    <div onclick="openProfileModal()" class="flex items-center space-x-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-all border border-white/5">
+                        <div id="sidebarUserAvatar" class="w-9 h-9 rounded-full bg-cover bg-center border border-neonPink/40 flex-shrink-0" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
+                        <div class="flex-1 min-w-0">
+                            <h4 id="sidebarUserName" class="text-xs font-bold text-white truncate">Alex Rivera</h4>
+                            <p id="sidebarUserStatus" class="text-[10px] text-gray-400 truncate">Senior Strategist</p>
+                        </div>
+                        <i data-lucide="settings" class="w-3.5 h-3.5 text-gray-400"></i>
+                    </div>
+
+                    <a href="#" onclick="showNotification('Logged out successfully')" class="flex items-center space-x-3 px-3.5 py-2 rounded-xl text-red-400 hover:bg-red-500/10 text-xs transition-all">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MAIN CHAT AREA -->
+            <div class="flex-1 flex flex-col bg-[#11131a] relative">
+                
+                <!-- Chat Top Header Bar -->
+                <div class="h-16 px-6 bg-black/30 border-b border-white/10 flex items-center justify-between flex-shrink-0">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex flex-col">
+                            <div class="flex items-center space-x-2">
+                                <h3 id="currentChatTitle" class="font-bold text-white text-sm sm:text-base">Q4 Strategy Analysis</h3>
+                                <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                            <p id="currentChatStatus" class="text-xs text-gray-400">Last active: 2 min ago</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <button onclick="openProfileModal()" class="md:hidden p-2 rounded-xl glass-pill text-gray-300 hover:text-neonPink transition-colors" title="User Profile">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="clearCurrentChat()" class="p-2 rounded-xl glass-pill text-gray-300 hover:text-neonPink transition-colors" title="Clear Chat">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Message Thread Scroll Container -->
+                <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col">
+                    
+                    <!-- Timestamp Divider -->
+                    <div class="flex items-center justify-center my-2">
+                        <span class="text-[11px] text-gray-500 bg-black/40 px-3 py-1 rounded-full border border-white/5">Today &bull; 10:47 AM</span>
+                    </div>
+
+                    <!-- User Bubble 1 -->
+                    <div class="flex items-end justify-end space-x-3 max-w-[85%] sm:max-w-[70%] ml-auto">
+                        <div class="flex flex-col items-end">
+                            <div class="rose-gradient-bg p-4 rounded-2xl rounded-tr-sm text-sm text-white shadow-md leading-relaxed">
+                                Hey Rosie, how can I optimize this marketing strategy?
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 mr-1">10:47 AM</span>
+                        </div>
+                        <div id="msgAvatar1" class="w-8 h-8 rounded-full bg-cover bg-center flex-shrink-0 ring-2 ring-white/10" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
+                    </div>
+
+                    <!-- AI Bubble 1 -->
+                    <div class="flex items-end space-x-3 max-w-[85%] sm:max-w-[70%]">
+                        <div class="w-8 h-8 rounded-xl rose-gradient-bg flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-neonPink/20">
+                            R
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="bg-[#181b26] border border-white/10 p-4 rounded-2xl rounded-tl-sm text-sm text-gray-200 shadow-md leading-relaxed">
+                                Hello! Optimizing your strategy is my specialty. Let's analyze your current goals and target audience. What are you focusing on this quarter?
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 ml-1">10:47 AM</span>
+                        </div>
+                    </div>
+
+                    <!-- User Bubble 2 -->
+                    <div class="flex items-end justify-end space-x-3 max-w-[85%] sm:max-w-[70%] ml-auto">
+                        <div class="flex flex-col items-end">
+                            <div class="rose-gradient-bg p-4 rounded-2xl rounded-tr-sm text-sm text-white shadow-md leading-relaxed">
+                                Focusing on increasing leads by 25%.
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 mr-1">10:47 AM</span>
+                        </div>
+                        <div id="msgAvatar2" class="w-8 h-8 rounded-full bg-cover bg-center flex-shrink-0 ring-2 ring-white/10" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
+                    </div>
+
+                    <!-- AI Bubble 2 -->
+                    <div class="flex items-end space-x-3 max-w-[85%] sm:max-w-[70%]">
+                        <div class="w-8 h-8 rounded-xl rose-gradient-bg flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-neonPink/20">
+                            R
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="bg-[#181b26] border border-white/10 p-4 rounded-2xl rounded-tl-sm text-sm text-gray-200 shadow-md leading-relaxed">
+                                Understood. What channels are you currently using?
+                            </div>
+                            <span class="text-[10px] text-gray-500 mt-1 ml-1">10:47 AM</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Typing Indicator -->
+                <div id="typingIndicator" class="px-6 pb-2 hidden">
+                    <div class="flex items-center space-x-2 text-xs text-gray-400 italic">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce"></div>
+                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce" style="animation-delay: 0.2s;"></div>
+                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce" style="animation-delay: 0.4s;"></div>
+                        </div>
+                        <span>Rosie is formulating response...</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Input Bar Area -->
+                <div class="p-4 bg-black/40 border-t border-white/10 flex flex-col space-y-3 flex-shrink-0">
+                    
+                    <!-- Quick Action Pills Row -->
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
+                        <button onclick="sendQuickAction('Analyze Data')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-neonPink"></i>
+                            <span>Analyze Data</span>
+                        </button>
+                        <button onclick="sendQuickAction('Generate Ideas')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-roseGold-light"></i>
+                            <span>Generate Ideas</span>
+                        </button>
+                        <button onclick="sendQuickAction('Draft Email')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i data-lucide="mail" class="w-3.5 h-3.5 text-purple-400"></i>
+                            <span>Draft Email</span>
+                        </button>
+                        <button onclick="sendQuickAction('Summarize Report')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-pink-400"></i>
+                            <span>Summarize Report</span>
+                        </button>
+                    </div>
+
+                    <!-- Input Box + Send Controls -->
+                    <div class="flex items-center gap-3 bg-[#151821] border border-white/10 rounded-2xl px-4 py-2.5 focus-within:border-neonPink transition-colors">
+                        <input type="text" id="chatInput" placeholder="Type your message here..." 
+                            class="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none"
+                            onkeypress="handleKeyPress(event)">
+                        
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleVoiceRecord()" id="voiceBtn" class="p-2 rounded-xl text-gray-400 hover:text-neonPink transition-colors" title="Voice Input">
+                                <i data-lucide="mic" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="sendMessage()" class="w-9 h-9 rounded-xl rose-gradient-bg flex items-center justify-center text-white shadow-lg shadow-neonPink/30 hover:opacity-95 active:scale-95 transition-all">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- USER PROFILE / SETTINGS MODAL -->
+    <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md hidden p-4">
+        <div class="glass-window w-full max-w-md rounded-3xl p-6 sm:p-8 border border-neonPink/30 relativ
