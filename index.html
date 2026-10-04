@@ -15,7 +15,6 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
-        /* Custom scrollbar for chat */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -37,7 +36,7 @@
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
                 <div class="relative flex items-center cursor-pointer" onclick="openProfileInfo()">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Rosie AI" class="w-10 h-10 rounded-full object-cover border border-slate-200" id="headerAvatar">
+                    <img src="" alt="Rosie AI" class="w-10 h-10 rounded-full object-cover border border-slate-200 avatarImg" id="headerAvatar">
                     <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
                 </div>
                 <div class="leading-tight cursor-pointer" onclick="openProfileInfo()">
@@ -65,7 +64,7 @@
 
             <!-- AI Message -->
             <div class="flex items-end space-x-2 max-w-[82%]">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
+                <img src="" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
                 <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
                     Hello there! ✨ I'm Rosie, your personal AI companion. How can I brighten your day or help you out today?
                 </div>
@@ -80,7 +79,7 @@
 
             <!-- AI Message with Like / React Option -->
             <div class="flex items-end space-x-2 max-w-[82%] group">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
+                <img src="" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
                 <div class="relative">
                     <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
                         I'd love to help! 💡 We can explore creative brainstorming, generate compelling copy, or map out strategies. What’s your core idea?
@@ -93,9 +92,9 @@
 
         </div>
 
-        <!-- Typing Indicator (Hidden by default) -->
+        <!-- Typing Indicator -->
         <div id="typingIndicator" class="hidden px-4 py-2 bg-white flex items-center space-x-2">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-6 h-6 rounded-full object-cover avatarImg">
+            <img src="" class="w-6 h-6 rounded-full object-cover avatarImg">
             <div class="bg-slate-100 px-3 py-2 rounded-2xl flex space-x-1 items-center">
                 <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
                 <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
@@ -103,7 +102,7 @@
             </div>
         </div>
 
-        <!-- Chat Input Footer (Instagram DM Style) -->
+        <!-- Chat Input Footer -->
         <div class="p-3 bg-white border-t border-slate-100 shrink-0">
             <form id="chatForm" onsubmit="handleSendMessage(event)" class="flex items-center bg-slate-100 rounded-full px-4 py-2 border border-slate-200 focus-within:border-blue-500 transition">
                 <button type="button" class="text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mr-2 shrink-0 hover:bg-blue-200 transition">
@@ -119,14 +118,14 @@
             </form>
         </div>
 
-        <!-- Profile Info Modal (Hidden) -->
+        <!-- Profile Info Modal -->
         <div id="profileModal" class="absolute inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
             <div class="p-4 border-b border-slate-100 flex items-center space-x-3">
                 <button onclick="closeProfileInfo()" class="text-slate-800 text-lg"><i class="fa-solid fa-arrow-left"></i></button>
                 <span class="font-bold text-slate-900">Profile Details</span>
             </div>
             <div class="flex-1 overflow-y-auto p-6 flex flex-col items-center text-center">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-24 h-24 rounded-full object-cover shadow-md mb-4 border-2 border-blue-500 avatarImg">
+                <img src="" class="w-24 h-24 rounded-full object-cover shadow-md mb-4 border-2 border-blue-500 avatarImg">
                 <h2 class="font-bold text-xl text-slate-900 flex items-center justify-center space-x-1">
                     <span id="modalName">Rosie AI</span>
                     <i class="fa-solid fa-circle-check text-blue-500 text-sm"></i>
@@ -141,25 +140,19 @@
                         <button onclick="updateAvatar()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Apply</button>
                     </div>
                 </div>
-
-                <div class="w-full mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-2">
-                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">About AI Companion</div>
-                    <p class="text-sm text-slate-600 leading-relaxed">Your intelligent, creative companion ready to assist you anytime, anywhere with style and precision.</p>
-                </div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Set the custom anime pfp requested by user
-        const customFurinaPfp = "32d1834e1a4c5aefac5788f827a862af.jpg"; 
-        // Fallback or set directly if valid, let's update all avatar images in DOM
+        // User provided custom anime PFP URL
+        const defaultPfp = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1JNJBkek4-xH2niLEl3bzKdjELVKh2Gg2w&s";
+
         document.addEventListener("DOMContentLoaded", () => {
-            // Using the user-uploaded image for Rosie's PFP across the chat
-            const avatars = document.querySelectorAll('.avatarImg, #headerAvatar');
+            const avatars = document.querySelectorAll('.avatarImg');
             avatars.forEach(img => {
-                img.src = "32d1834e1a4c5aefac5788f827a862af.jpg";
+                img.src = defaultPfp;
             });
         });
 
@@ -181,16 +174,13 @@
             const text = messageInput.value.trim();
             if(!text) return;
 
-            // Append user message
             appendMessage(text, 'user');
             messageInput.value = '';
             sendBtn.classList.add('hidden');
 
-            // Show typing indicator
             typingIndicator.classList.remove('hidden');
             scrollToBottom();
 
-            // Simulate AI response
             setTimeout(() => {
                 typingIndicator.classList.add('hidden');
                 let aiReply = getAiResponse(text);
@@ -202,6 +192,7 @@
         function appendMessage(text, sender) {
             const isUser = sender === 'user';
             const msgDiv = document.createElement('div');
+            const currentAvatar = document.getElementById('headerAvatar').src;
             
             if(isUser) {
                 msgDiv.className = "flex items-end justify-end space-x-2 self-end max-w-[82%]";
@@ -213,7 +204,7 @@
             } else {
                 msgDiv.className = "flex items-end space-x-2 max-w-[82%] group";
                 msgDiv.innerHTML = `
-                    <img src="32d1834e1a4c5aefac5788f827a862af.jpg" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1" alt="Rosie">
+                    <img src="${currentAvatar}" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1" alt="Rosie">
                     <div class="relative">
                         <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
                             ${escapeHtml(text)}
@@ -228,10 +219,10 @@
         }
 
         function sendHeart() {
-            appendMessage("❤️", 'user');
+            appendMessage("💙", 'user');
             scrollToBottom();
             setTimeout(() => {
-                appendMessage("💖", 'ai');
+                appendMessage("💙", 'ai');
                 scrollToBottom();
             }, 800);
         }
@@ -251,7 +242,6 @@
             const lower = input.toLowerCase();
             if(lower.includes('hello') || lower.includes('hi')) return "Hey there! How's it going? ✨";
             if(lower.includes('idea') || lower.includes('project')) return "That sounds super exciting! Let's build a roadmap or brainstorm catchy angles for it. 🚀";
-            if(lower.includes('name')) return "I'm Rosie, your friendly AI companion! 😊";
             return "That's really interesting! Tell me more about what you're thinking. 💡";
         }
 
@@ -270,7 +260,7 @@
         function updateAvatar() {
             const url = document.getElementById('customAvatarUrl').value.trim();
             if(url) {
-                const allAvatars = document.querySelectorAll('.avatarImg, #headerAvatar');
+                const allAvatars = document.querySelectorAll('.avatarImg');
                 allAvatars.forEach(img => img.src = url);
                 alert("Avatar updated successfully!");
             }
@@ -288,5 +278,5 @@
         }
     </script>
 </body>
-                                                                                                    </html>
-                    
+    </html>
+                
