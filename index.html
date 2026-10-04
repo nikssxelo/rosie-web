@@ -1,322 +1,292 @@
-```html
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosie AI - Desktop App UI with User Profile</title>
+    <title>Rosie AI - Instagram Direct</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        roseGold: {
-                            light: '#ffd1dc',
-                            DEFAULT: '#e0a9a7',
-                            dark: '#b76e79',
-                        },
-                        neonPink: '#ff2a85',
-                        appBg: '#050608',
-                        windowBg: '#13151c',
-                        sidebarBg: '#0f1015',
-                        cardBg: 'rgba(25, 27, 38, 0.75)',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts & Lucide Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #050608;
-            color: #f3f4f6;
-            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
         }
-        .glass-window {
-            background: rgba(15, 17, 24, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 42, 133, 0.18);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 42, 133, 0.1);
-        }
-        .glass-pill {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-pill:hover {
-            background: rgba(255, 42, 133, 0.12);
-            border-color: rgba(255, 42, 133, 0.3);
-        }
-        .rose-gradient-bg {
-            background: linear-gradient(135deg, #b76e79 0%, #ff2a85 100%);
-        }
-        .rose-gradient-text {
-            background: linear-gradient(135deg, #ffd1dc 0%, #ff2a85 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        /* Custom scrollbar */
+        /* Custom scrollbar for chat */
         ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
+            width: 4px;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff2a85;
+            background: #cbd5e1;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-0 sm:p-6 relative selection:bg-neonPink selection:text-white">
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-0 sm:p-4">
 
-    <!-- Background Ambient Glows -->
-    <div class="absolute top-10 left-10 w-96 h-96 bg-neonPink/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-10 right-10 w-[500px] h-[500px] bg-roseGold-dark/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <!-- Main Desktop Window Container -->
-    <div class="w-full max-w-6xl h-screen sm:h-[820px] glass-window sm:rounded-2xl flex flex-col overflow-hidden relative z-10">
+    <!-- Mobile Device Container -->
+    <div class="w-full sm:max-w-[410px] h-screen sm:h-[844px] bg-white sm:rounded-[40px] sm:shadow-2xl flex flex-col overflow-hidden relative border border-slate-200">
         
-        <!-- Top Window Titlebar -->
-        <div class="h-11 px-4 bg-black/40 border-b border-white/10 flex items-center justify-between select-none flex-shrink-0">
-            <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 cursor-pointer transition-colors" title="Close" onclick="showNotification('Window minimized to dock')"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 cursor-pointer transition-colors" title="Minimize"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 cursor-pointer transition-colors" title="Maximize"></div>
-                <span class="ml-4 text-xs font-medium text-gray-400 tracking-wider">Rosie AI Studio v4.5</span>
+        <!-- Top Header (Instagram DM Style) -->
+        <div class="bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between z-20 shrink-0">
+            <div class="flex items-center space-x-3">
+                <button onclick="goBack()" class="text-slate-800 text-lg hover:opacity-75 transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="relative flex items-center cursor-pointer" onclick="openProfileInfo()">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Rosie AI" class="w-10 h-10 rounded-full object-cover border border-slate-200" id="headerAvatar">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+                </div>
+                <div class="leading-tight cursor-pointer" onclick="openProfileInfo()">
+                    <div class="flex items-center space-x-1">
+                        <span class="font-bold text-slate-900 text-sm" id="headerName">Rosie AI</span>
+                        <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i>
+                    </div>
+                    <span class="text-xs text-slate-500" id="headerStatus">Active now</span>
+                </div>
             </div>
-            
-            <div class="flex items-center space-x-3 text-gray-400">
-                <button onclick="toggleSound()" id="soundBtn" class="hover:text-white transition-colors p-1" title="Toggle Sound">
-                    <i id="soundIcon" data-lucide="volume-2" class="w-4 h-4"></i>
-                </button>
-                <button onclick="openProfileModal()" class="hover:text-neonPink transition-colors p-1 flex items-center gap-1 text-xs" title="Edit Profile">
-                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
-                    <span id="headerUserName" class="hidden sm:inline">Alex Rivera</span>
-                </button>
+            <div class="flex items-center space-x-5 text-slate-800 text-lg">
+                <button class="hover:text-blue-600 transition"><i class="fa-solid fa-phone"></i></button>
+                <button class="hover:text-blue-600 transition"><i class="fa-solid fa-video"></i></button>
+                <button class="hover:text-blue-600 transition" onclick="openProfileInfo()"><i class="fa-solid fa-circle-info"></i></button>
             </div>
         </div>
 
-        <!-- Inner Application Body (Sidebar + Chat Area) -->
-        <div class="flex-1 flex overflow-hidden">
+        <!-- Chat Messages Area -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-white flex flex-col">
             
-            <!-- LEFT SIDEBAR -->
-            <div class="w-64 bg-[#0d0e14] border-r border-white/10 flex flex-col justify-between hidden md:flex flex-shrink-0 select-none">
-                
-                <!-- Top Brand & Navigation -->
-                <div class="p-5">
-                    <div class="flex items-center space-x-3 mb-8">
-                        <div class="w-9 h-9 rounded-xl rose-gradient-bg flex items-center justify-center text-white font-bold shadow-lg shadow-neonPink/30">
-                            <i data-lucide="sparkles" class="w-5 h-5"></i>
-                        </div>
-                        <span class="text-lg font-bold tracking-tight rose-gradient-text">Rosie AI</span>
-                    </div>
+            <!-- Timestamp -->
+            <div class="text-center my-2">
+                <span class="text-[11px] font-medium text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Today 11:45 AM</span>
+            </div>
 
-                    <div class="space-y-1 text-sm">
-                        <a href="#" onclick="switchNav(this, 'Dashboard')" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                            <span>Dashboard</span>
-                        </a>
-
-                        <!-- Chat History Section -->
-                        <div class="pt-2">
-                            <div class="flex items-center justify-between px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                                <span>Chat History</span>
-                                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
-                            </div>
-                            
-                            <div class="mt-1 space-y-1 pl-2">
-                                <a href="#" onclick="switchChatSession(this, 'Q4 Strategy Analysis', 'Last active: 2 min ago')" class="flex items-center space-x-3 px-3 py-2 rounded-xl bg-neonPink/15 text-neonPink font-medium text-xs border border-neonPink/30 transition-all">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-neonPink"></span>
-                                    <span class="truncate">Q4 Planning</span>
-                                </a>
-                                <a href="#" onclick="switchChatSession(this, 'Lead Generation Framework', 'Last active: 1 hour ago')" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-xs transition-all">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-                                    <span class="truncate">Lead Gen</span>
-                                </a>
-                                <a href="#" onclick="switchChatSession(this, 'Competitor Market Analysis', 'Last active: Yesterday')" class="flex items-center space-x-3 px-3 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 text-xs transition-all">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-                                    <span class="truncate">Competitor Analysis</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom User Card / Profile Trigger & Settings -->
-                <div class="p-4 border-t border-white/10 space-y-3">
-                    <!-- User Profile Quick Bar -->
-                    <div onclick="openProfileModal()" class="flex items-center space-x-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 cursor-pointer transition-all border border-white/5">
-                        <div id="sidebarUserAvatar" class="w-9 h-9 rounded-full bg-cover bg-center border border-neonPink/40 flex-shrink-0" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
-                        <div class="flex-1 min-w-0">
-                            <h4 id="sidebarUserName" class="text-xs font-bold text-white truncate">Alex Rivera</h4>
-                            <p id="sidebarUserStatus" class="text-[10px] text-gray-400 truncate">Senior Strategist</p>
-                        </div>
-                        <i data-lucide="settings" class="w-3.5 h-3.5 text-gray-400"></i>
-                    </div>
-
-                    <a href="#" onclick="showNotification('Logged out successfully')" class="flex items-center space-x-3 px-3.5 py-2 rounded-xl text-red-400 hover:bg-red-500/10 text-xs transition-all">
-                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                        <span>Logout</span>
-                    </a>
+            <!-- AI Message -->
+            <div class="flex items-end space-x-2 max-w-[82%]">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
+                <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
+                    Hello there! ✨ I'm Rosie, your personal AI companion. How can I brighten your day or help you out today?
                 </div>
             </div>
 
-            <!-- MAIN CHAT AREA -->
-            <div class="flex-1 flex flex-col bg-[#11131a] relative">
-                
-                <!-- Chat Top Header Bar -->
-                <div class="h-16 px-6 bg-black/30 border-b border-white/10 flex items-center justify-between flex-shrink-0">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex flex-col">
-                            <div class="flex items-center space-x-2">
-                                <h3 id="currentChatTitle" class="font-bold text-white text-sm sm:text-base">Q4 Strategy Analysis</h3>
-                                <div class="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <span>Online</span>
-                                </div>
-                            </div>
-                            <p id="currentChatStatus" class="text-xs text-gray-400">Last active: 2 min ago</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-3">
-                        <button onclick="openProfileModal()" class="md:hidden p-2 rounded-xl glass-pill text-gray-300 hover:text-neonPink transition-colors" title="User Profile">
-                            <i data-lucide="user" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="clearCurrentChat()" class="p-2 rounded-xl glass-pill text-gray-300 hover:text-neonPink transition-colors" title="Clear Chat">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </div>
+            <!-- User Message -->
+            <div class="flex items-end justify-end space-x-2 self-end max-w-[82%]">
+                <div class="bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm">
+                    Hey Rosie! I need some cool ideas for an upcoming project. What do you suggest? 🚀
                 </div>
+            </div>
 
-                <!-- Message Thread Scroll Container -->
-                <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col">
-                    
-                    <!-- Timestamp Divider -->
-                    <div class="flex items-center justify-center my-2">
-                        <span class="text-[11px] text-gray-500 bg-black/40 px-3 py-1 rounded-full border border-white/5">Today &bull; 10:47 AM</span>
+            <!-- AI Message with Like / React Option -->
+            <div class="flex items-end space-x-2 max-w-[82%] group">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
+                <div class="relative">
+                    <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
+                        I'd love to help! 💡 We can explore creative brainstorming, generate compelling copy, or map out strategies. What’s your core idea?
                     </div>
-
-                    <!-- User Bubble 1 -->
-                    <div class="flex items-end justify-end space-x-3 max-w-[85%] sm:max-w-[70%] ml-auto">
-                        <div class="flex flex-col items-end">
-                            <div class="rose-gradient-bg p-4 rounded-2xl rounded-tr-sm text-sm text-white shadow-md leading-relaxed">
-                                Hey Rosie, how can I optimize this marketing strategy?
-                            </div>
-                            <span class="text-[10px] text-gray-500 mt-1 mr-1">10:47 AM</span>
-                        </div>
-                        <div id="msgAvatar1" class="w-8 h-8 rounded-full bg-cover bg-center flex-shrink-0 ring-2 ring-white/10" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
-                    </div>
-
-                    <!-- AI Bubble 1 -->
-                    <div class="flex items-end space-x-3 max-w-[85%] sm:max-w-[70%]">
-                        <div class="w-8 h-8 rounded-xl rose-gradient-bg flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-neonPink/20">
-                            R
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="bg-[#181b26] border border-white/10 p-4 rounded-2xl rounded-tl-sm text-sm text-gray-200 shadow-md leading-relaxed">
-                                Hello! Optimizing your strategy is my specialty. Let's analyze your current goals and target audience. What are you focusing on this quarter?
-                            </div>
-                            <span class="text-[10px] text-gray-500 mt-1 ml-1">10:47 AM</span>
-                        </div>
-                    </div>
-
-                    <!-- User Bubble 2 -->
-                    <div class="flex items-end justify-end space-x-3 max-w-[85%] sm:max-w-[70%] ml-auto">
-                        <div class="flex flex-col items-end">
-                            <div class="rose-gradient-bg p-4 rounded-2xl rounded-tr-sm text-sm text-white shadow-md leading-relaxed">
-                                Focusing on increasing leads by 25%.
-                            </div>
-                            <span class="text-[10px] text-gray-500 mt-1 mr-1">10:47 AM</span>
-                        </div>
-                        <div id="msgAvatar2" class="w-8 h-8 rounded-full bg-cover bg-center flex-shrink-0 ring-2 ring-white/10" style="background-image: url('https://placehold.co/100x100/e0a9a7/ffffff?text=AR')"></div>
-                    </div>
-
-                    <!-- AI Bubble 2 -->
-                    <div class="flex items-end space-x-3 max-w-[85%] sm:max-w-[70%]">
-                        <div class="w-8 h-8 rounded-xl rose-gradient-bg flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md shadow-neonPink/20">
-                            R
-                        </div>
-                        <div class="flex flex-col">
-                            <div class="bg-[#181b26] border border-white/10 p-4 rounded-2xl rounded-tl-sm text-sm text-gray-200 shadow-md leading-relaxed">
-                                Understood. What channels are you currently using?
-                            </div>
-                            <span class="text-[10px] text-gray-500 mt-1 ml-1">10:47 AM</span>
-                        </div>
-                    </div>
-
+                    <button onclick="toggleLike(this)" class="absolute -right-7 bottom-1 text-slate-400 hover:text-red-500 transition text-sm">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
                 </div>
+            </div>
 
-                <!-- Typing Indicator -->
-                <div id="typingIndicator" class="px-6 pb-2 hidden">
-                    <div class="flex items-center space-x-2 text-xs text-gray-400 italic">
-                        <div class="flex space-x-1">
-                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce"></div>
-                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce" style="animation-delay: 0.2s;"></div>
-                            <div class="w-2 h-2 rounded-full bg-neonPink animate-bounce" style="animation-delay: 0.4s;"></div>
-                        </div>
-                        <span>Rosie is formulating response...</span>
-                    </div>
-                </div>
+        </div>
 
-                <!-- Bottom Input Bar Area -->
-                <div class="p-4 bg-black/40 border-t border-white/10 flex flex-col space-y-3 flex-shrink-0">
-                    
-                    <!-- Quick Action Pills Row -->
-                    <div class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
-                        <button onclick="sendQuickAction('Analyze Data')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
-                            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-neonPink"></i>
-                            <span>Analyze Data</span>
-                        </button>
-                        <button onclick="sendQuickAction('Generate Ideas')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
-                            <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-roseGold-light"></i>
-                            <span>Generate Ideas</span>
-                        </button>
-                        <button onclick="sendQuickAction('Draft Email')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
-                            <i data-lucide="mail" class="w-3.5 h-3.5 text-purple-400"></i>
-                            <span>Draft Email</span>
-                        </button>
-                        <button onclick="sendQuickAction('Summarize Report')" class="glass-pill px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 hover:text-white transition-all whitespace-nowrap flex items-center gap-1.5">
-                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-pink-400"></i>
-                            <span>Summarize Report</span>
-                        </button>
-                    </div>
-
-                    <!-- Input Box + Send Controls -->
-                    <div class="flex items-center gap-3 bg-[#151821] border border-white/10 rounded-2xl px-4 py-2.5 focus-within:border-neonPink transition-colors">
-                        <input type="text" id="chatInput" placeholder="Type your message here..." 
-                            class="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none"
-                            onkeypress="handleKeyPress(event)">
-                        
-                        <div class="flex items-center space-x-2">
-                            <button onclick="toggleVoiceRecord()" id="voiceBtn" class="p-2 rounded-xl text-gray-400 hover:text-neonPink transition-colors" title="Voice Input">
-                                <i data-lucide="mic" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="sendMessage()" class="w-9 h-9 rounded-xl rose-gradient-bg flex items-center justify-center text-white shadow-lg shadow-neonPink/30 hover:opacity-95 active:scale-95 transition-all">
-                                <i data-lucide="send" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
+        <!-- Typing Indicator (Hidden by default) -->
+        <div id="typingIndicator" class="hidden px-4 py-2 bg-white flex items-center space-x-2">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-6 h-6 rounded-full object-cover avatarImg">
+            <div class="bg-slate-100 px-3 py-2 rounded-2xl flex space-x-1 items-center">
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
             </div>
         </div>
+
+        <!-- Chat Input Footer (Instagram DM Style) -->
+        <div class="p-3 bg-white border-t border-slate-100 shrink-0">
+            <form id="chatForm" onsubmit="handleSendMessage(event)" class="flex items-center bg-slate-100 rounded-full px-4 py-2 border border-slate-200 focus-within:border-blue-500 transition">
+                <button type="button" class="text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mr-2 shrink-0 hover:bg-blue-200 transition">
+                    <i class="fa-solid fa-camera text-xs"></i>
+                </button>
+                <input type="text" id="messageInput" placeholder="Message Rosie..." class="bg-transparent flex-1 text-sm outline-none text-slate-800 placeholder-slate-400">
+                <div class="flex items-center space-x-3 ml-2 text-slate-500">
+                    <button type="button" class="hover:text-blue-600 transition hidden sm:block"><i class="fa-solid fa-microphone"></i></button>
+                    <button type="button" class="hover:text-blue-600 transition"><i class="fa-regular fa-image"></i></button>
+                    <button type="submit" id="sendBtn" class="text-blue-600 font-semibold text-sm hover:opacity-80 transition hidden">Send</button>
+                    <button type="button" onclick="sendHeart()" class="text-red-500 hover:scale-110 transition text-lg"><i class="fa-solid fa-heart"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Profile Info Modal (Hidden) -->
+        <div id="profileModal" class="absolute inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+            <div class="p-4 border-b border-slate-100 flex items-center space-x-3">
+                <button onclick="closeProfileInfo()" class="text-slate-800 text-lg"><i class="fa-solid fa-arrow-left"></i></button>
+                <span class="font-bold text-slate-900">Profile Details</span>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 flex flex-col items-center text-center">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-24 h-24 rounded-full object-cover shadow-md mb-4 border-2 border-blue-500 avatarImg">
+                <h2 class="font-bold text-xl text-slate-900 flex items-center justify-center space-x-1">
+                    <span id="modalName">Rosie AI</span>
+                    <i class="fa-solid fa-circle-check text-blue-500 text-sm"></i>
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">@rosie_ai_official</p>
+                
+                <div class="w-full mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-3">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Customize PFP</div>
+                    <label class="block text-sm font-medium text-slate-700">Change Avatar Image URL:</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="customAvatarUrl" placeholder="Paste image URL here..." class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-blue-500">
+                        <button onclick="updateAvatar()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Apply</button>
+                    </div>
+                </div>
+
+                <div class="w-full mt-4 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-2">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">About AI Companion</div>
+                    <p class="text-sm text-slate-600 leading-relaxed">Your intelligent, creative companion ready to assist you anytime, anywhere with style and precision.</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- USER PROFILE / SETTINGS MODAL -->
-    <div id="profileModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md hidden p-4">
-        <div class="glass-window w-full max-w-md rounded-3xl p-6 sm:p-8 border border-neonPink/30 relativ
+    <script>
+        // Set the custom anime pfp requested by user
+        const customFurinaPfp = "32d1834e1a4c5aefac5788f827a862af.jpg"; 
+        // Fallback or set directly if valid, let's update all avatar images in DOM
+        document.addEventListener("DOMContentLoaded", () => {
+            // Using the user-uploaded image for Rosie's PFP across the chat
+            const avatars = document.querySelectorAll('.avatarImg, #headerAvatar');
+            avatars.forEach(img => {
+                img.src = "32d1834e1a4c5aefac5788f827a862af.jpg";
+            });
+        });
+
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        messageInput.addEventListener('input', (e) => {
+            if(e.target.value.trim().length > 0) {
+                sendBtn.classList.remove('hidden');
+            } else {
+                sendBtn.classList.add('hidden');
+            }
+        });
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if(!text) return;
+
+            // Append user message
+            appendMessage(text, 'user');
+            messageInput.value = '';
+            sendBtn.classList.add('hidden');
+
+            // Show typing indicator
+            typingIndicator.classList.remove('hidden');
+            scrollToBottom();
+
+            // Simulate AI response
+            setTimeout(() => {
+                typingIndicator.classList.add('hidden');
+                let aiReply = getAiResponse(text);
+                appendMessage(aiReply, 'ai');
+                scrollToBottom();
+            }, 1200);
+        }
+
+        function appendMessage(text, sender) {
+            const isUser = sender === 'user';
+            const msgDiv = document.createElement('div');
+            
+            if(isUser) {
+                msgDiv.className = "flex items-end justify-end space-x-2 self-end max-w-[82%]";
+                msgDiv.innerHTML = `
+                    <div class="bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm">
+                        ${escapeHtml(text)}
+                    </div>
+                `;
+            } else {
+                msgDiv.className = "flex items-end space-x-2 max-w-[82%] group";
+                msgDiv.innerHTML = `
+                    <img src="32d1834e1a4c5aefac5788f827a862af.jpg" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1" alt="Rosie">
+                    <div class="relative">
+                        <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
+                            ${escapeHtml(text)}
+                        </div>
+                        <button onclick="toggleLike(this)" class="absolute -right-7 bottom-1 text-slate-400 hover:text-red-500 transition text-sm">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                `;
+            }
+            chatContainer.appendChild(msgDiv);
+        }
+
+        function sendHeart() {
+            appendMessage("❤️", 'user');
+            scrollToBottom();
+            setTimeout(() => {
+                appendMessage("💖", 'ai');
+                scrollToBottom();
+            }, 800);
+        }
+
+        function toggleLike(btn) {
+            const icon = btn.querySelector('i');
+            if(icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular', 'fa-heart');
+                icon.classList.add('fa-solid', 'fa-heart', 'text-red-500');
+            } else {
+                icon.classList.remove('fa-solid', 'fa-heart', 'text-red-500');
+                icon.classList.add('fa-regular', 'fa-heart');
+            }
+        }
+
+        function getAiResponse(input) {
+            const lower = input.toLowerCase();
+            if(lower.includes('hello') || lower.includes('hi')) return "Hey there! How's it going? ✨";
+            if(lower.includes('idea') || lower.includes('project')) return "That sounds super exciting! Let's build a roadmap or brainstorm catchy angles for it. 🚀";
+            if(lower.includes('name')) return "I'm Rosie, your friendly AI companion! 😊";
+            return "That's really interesting! Tell me more about what you're thinking. 💡";
+        }
+
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function openProfileInfo() {
+            document.getElementById('profileModal').style.transform = 'translateX(0)';
+        }
+
+        function closeProfileInfo() {
+            document.getElementById('profileModal').style.transform = 'translateX(100%)';
+        }
+
+        function updateAvatar() {
+            const url = document.getElementById('customAvatarUrl').value.trim();
+            if(url) {
+                const allAvatars = document.querySelectorAll('.avatarImg, #headerAvatar');
+                allAvatars.forEach(img => img.src = url);
+                alert("Avatar updated successfully!");
+            }
+        }
+
+        function goBack() {
+            if(confirm("Go back to dashboard?")) {
+                window.location.reload();
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+                                                                                                    </html>
+                    
