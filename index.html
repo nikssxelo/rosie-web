@@ -1,282 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosie AI - Instagram Direct</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f0fa">
+  <meta name="description" content="A cozy chat with Rosie, your warm and playful AI companion.">
+  <title>Rosie — a little space to talk</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-0 sm:p-4">
+<body>
+  <main class="app-shell">
+    <aside class="intro-panel" aria-label="About Rosie">
+      <a class="brand" href="#top" aria-label="Rosie home">
+        <span class="brand-mark" aria-hidden="true">✿</span>
+        <span>rosie</span>
+      </a>
 
-    <!-- Mobile Device Container -->
-    <div class="w-full sm:max-w-[410px] h-screen sm:h-[844px] bg-white sm:rounded-[40px] sm:shadow-2xl flex flex-col overflow-hidden relative border border-slate-200">
-        
-        <!-- Top Header (Instagram DM Style) -->
-        <div class="bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between z-20 shrink-0">
-            <div class="flex items-center space-x-3">
-                <button onclick="goBack()" class="text-slate-800 text-lg hover:opacity-75 transition">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <div class="relative flex items-center cursor-pointer" onclick="openProfileInfo()">
-                    <img src="" alt="Rosie AI" class="w-10 h-10 rounded-full object-cover border border-slate-200 avatarImg" id="headerAvatar">
-                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
-                </div>
-                <div class="leading-tight cursor-pointer" onclick="openProfileInfo()">
-                    <div class="flex items-center space-x-1">
-                        <span class="font-bold text-slate-900 text-sm" id="headerName">Rosie AI</span>
-                        <i class="fa-solid fa-circle-check text-blue-500 text-xs"></i>
-                    </div>
-                    <span class="text-xs text-slate-500" id="headerStatus">Active now</span>
-                </div>
+      <div class="intro-copy" id="top">
+        <p class="eyebrow">YOUR LITTLE CORNER OF THE INTERNET</p>
+        <h1>A soft place<br><span>to land.</span></h1>
+        <p class="intro-description">Some days call for big ideas. Some days, just a familiar chat. Rosie is here for both.</p>
+      </div>
+
+      <div class="persona-card">
+        <div class="avatar avatar-large" aria-hidden="true">R<span class="avatar-spark">✦</span></div>
+        <div class="persona-copy">
+          <strong>Rosie</strong>
+          <span>Your AI companion</span>
+        </div>
+        <span class="online-indicator" aria-label="Ready"></span>
+      </div>
+
+      <div class="side-note">
+        <span class="note-flower" aria-hidden="true">✧</span>
+        <p>Pick up wherever the conversation takes you. Rosie follows the recent context in this chat.</p>
+      </div>
+
+      <div class="panel-footer">Made for the little moments. <span aria-hidden="true">♡</span></div>
+    </aside>
+
+    <section class="chat-panel" aria-label="Chat with Rosie">
+      <header class="chat-header">
+        <div class="header-person">
+          <div class="avatar avatar-small" aria-hidden="true">R<span class="avatar-spark">✦</span></div>
+          <div class="header-copy">
+            <div class="header-name">Rosie <span class="verified-mark" aria-label="AI companion">✿</span></div>
+            <p id="connectionStatus" class="connection-status" role="status" aria-live="polite">Ready when you are</p>
+          </div>
+        </div>
+        <button class="new-chat-button" id="newChatButton" type="button" title="Start a new conversation">
+          <span class="new-chat-icon" aria-hidden="true">↻</span>
+          <span>New chat</span>
+        </button>
+      </header>
+
+      <div class="conversation" id="conversation">
+        <div class="date-divider"><span>Today</span></div>
+        <div class="message-list" id="messageList" role="log" aria-label="Conversation messages" aria-live="polite" aria-relevant="additions text">
+          <article class="message-row assistant-message" data-initial="true">
+            <div class="message-avatar" aria-hidden="true">R</div>
+            <div class="message-content">
+              <div class="message-bubble">Heeey, you made it 🌸 What’s on your mind?</div>
+              <time class="message-time">Rosie</time>
             </div>
-            <div class="flex items-center space-x-5 text-slate-800 text-lg">
-                <button class="hover:text-blue-600 transition"><i class="fa-solid fa-phone"></i></button>
-                <button class="hover:text-blue-600 transition"><i class="fa-solid fa-video"></i></button>
-                <button class="hover:text-blue-600 transition" onclick="openProfileInfo()"><i class="fa-solid fa-circle-info"></i></button>
-            </div>
+          </article>
         </div>
 
-        <!-- Chat Messages Area -->
-        <div id="chatContainer" class="flex-1 overflow-y-auto px-4 py-4 space-y-4 bg-white flex flex-col">
-            
-            <!-- Timestamp -->
-            <div class="text-center my-2">
-                <span class="text-[11px] font-medium text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Today 11:45 AM</span>
-            </div>
-
-            <!-- AI Message -->
-            <div class="flex items-end space-x-2 max-w-[82%]">
-                <img src="" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
-                <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
-                    Hello there! ✨ I'm Rosie, your personal AI companion. How can I brighten your day or help you out today?
-                </div>
-            </div>
-
-            <!-- User Message -->
-            <div class="flex items-end justify-end space-x-2 self-end max-w-[82%]">
-                <div class="bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm">
-                    Hey Rosie! I need some cool ideas for an upcoming project. What do you suggest? 🚀
-                </div>
-            </div>
-
-            <!-- AI Message with Like / React Option -->
-            <div class="flex items-end space-x-2 max-w-[82%] group">
-                <img src="" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1 avatarImg" alt="Rosie">
-                <div class="relative">
-                    <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
-                        I'd love to help! 💡 We can explore creative brainstorming, generate compelling copy, or map out strategies. What’s your core idea?
-                    </div>
-                    <button onclick="toggleLike(this)" class="absolute -right-7 bottom-1 text-slate-400 hover:text-red-500 transition text-sm">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-                </div>
-            </div>
-
+        <div class="starter-prompts" id="starterPrompts" aria-label="Conversation starters">
+          <p>Pick a little conversation starter</p>
+          <div class="prompt-list">
+            <button class="prompt-chip" type="button" data-prompt="Kaisi ho?">Kaisi ho? <span aria-hidden="true">↗</span></button>
+            <button class="prompt-chip" type="button" data-prompt="Tell me something fun">Tell me something fun <span aria-hidden="true">↗</span></button>
+            <button class="prompt-chip" type="button" data-prompt="I had a long day">I had a long day <span aria-hidden="true">↗</span></button>
+          </div>
         </div>
 
-        <!-- Typing Indicator -->
-        <div id="typingIndicator" class="hidden px-4 py-2 bg-white flex items-center space-x-2">
-            <img src="" class="w-6 h-6 rounded-full object-cover avatarImg">
-            <div class="bg-slate-100 px-3 py-2 rounded-2xl flex space-x-1 items-center">
-                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
-                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-            </div>
+        <div class="typing-row" id="typingIndicator" hidden aria-label="Rosie is typing">
+          <div class="message-avatar" aria-hidden="true">R</div>
+          <div class="typing-bubble"><span></span><span></span><span></span></div>
+          <span class="typing-label">Rosie is thinking…</span>
         </div>
+      </div>
 
-        <!-- Chat Input Footer -->
-        <div class="p-3 bg-white border-t border-slate-100 shrink-0">
-            <form id="chatForm" onsubmit="handleSendMessage(event)" class="flex items-center bg-slate-100 rounded-full px-4 py-2 border border-slate-200 focus-within:border-blue-500 transition">
-                <button type="button" class="text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mr-2 shrink-0 hover:bg-blue-200 transition">
-                    <i class="fa-solid fa-camera text-xs"></i>
-                </button>
-                <input type="text" id="messageInput" placeholder="Message Rosie..." class="bg-transparent flex-1 text-sm outline-none text-slate-800 placeholder-slate-400">
-                <div class="flex items-center space-x-3 ml-2 text-slate-500">
-                    <button type="button" class="hover:text-blue-600 transition hidden sm:block"><i class="fa-solid fa-microphone"></i></button>
-                    <button type="button" class="hover:text-blue-600 transition"><i class="fa-regular fa-image"></i></button>
-                    <button type="submit" id="sendBtn" class="text-blue-600 font-semibold text-sm hover:opacity-80 transition hidden">Send</button>
-                    <button type="button" onclick="sendHeart()" class="text-red-500 hover:scale-110 transition text-lg"><i class="fa-solid fa-heart"></i></button>
-                </div>
-            </form>
+      <div class="compose-area">
+        <form class="composer" id="chatForm">
+          <label class="sr-only" for="messageInput">Message Rosie</label>
+          <textarea id="messageInput" name="message" rows="1" maxlength="2000" placeholder="Write something to Rosie…" autocomplete="off"></textarea>
+          <button class="send-button" id="sendButton" type="submit" aria-label="Send message" disabled>
+            <span aria-hidden="true">↑</span>
+          </button>
+        </form>
+        <div class="composer-footer">
+          <span>Enter to send <span class="footer-dot">·</span> Shift+Enter for a new line</span>
+          <span class="privacy-note">Messages are sent to Rosie’s Hugging Face Space. Avoid sharing sensitive info.</span>
         </div>
+      </div>
+    </section>
+  </main>
 
-        <!-- Profile Info Modal -->
-        <div id="profileModal" class="absolute inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
-            <div class="p-4 border-b border-slate-100 flex items-center space-x-3">
-                <button onclick="closeProfileInfo()" class="text-slate-800 text-lg"><i class="fa-solid fa-arrow-left"></i></button>
-                <span class="font-bold text-slate-900">Profile Details</span>
-            </div>
-            <div class="flex-1 overflow-y-auto p-6 flex flex-col items-center text-center">
-                <img src="" class="w-24 h-24 rounded-full object-cover shadow-md mb-4 border-2 border-blue-500 avatarImg">
-                <h2 class="font-bold text-xl text-slate-900 flex items-center justify-center space-x-1">
-                    <span id="modalName">Rosie AI</span>
-                    <i class="fa-solid fa-circle-check text-blue-500 text-sm"></i>
-                </h2>
-                <p class="text-xs text-slate-500 mt-1">@rosie_ai_official</p>
-                
-                <div class="w-full mt-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-3">
-                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Customize PFP</div>
-                    <label class="block text-sm font-medium text-slate-700">Change Avatar Image URL:</label>
-                    <div class="flex space-x-2">
-                        <input type="text" id="customAvatarUrl" placeholder="Paste image URL here..." class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-blue-500">
-                        <button onclick="updateAvatar()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Apply</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        // User provided custom anime PFP URL
-        const defaultPfp = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1JNJBkek4-xH2niLEl3bzKdjELVKh2Gg2w&s";
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const avatars = document.querySelectorAll('.avatarImg');
-            avatars.forEach(img => {
-                img.src = defaultPfp;
-            });
-        });
-
-        const chatContainer = document.getElementById('chatContainer');
-        const messageInput = document.getElementById('messageInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
-
-        messageInput.addEventListener('input', (e) => {
-            if(e.target.value.trim().length > 0) {
-                sendBtn.classList.remove('hidden');
-            } else {
-                sendBtn.classList.add('hidden');
-            }
-        });
-
-        function handleSendMessage(e) {
-            e.preventDefault();
-            const text = messageInput.value.trim();
-            if(!text) return;
-
-            appendMessage(text, 'user');
-            messageInput.value = '';
-            sendBtn.classList.add('hidden');
-
-            typingIndicator.classList.remove('hidden');
-            scrollToBottom();
-
-            setTimeout(() => {
-                typingIndicator.classList.add('hidden');
-                let aiReply = getAiResponse(text);
-                appendMessage(aiReply, 'ai');
-                scrollToBottom();
-            }, 1200);
-        }
-
-        function appendMessage(text, sender) {
-            const isUser = sender === 'user';
-            const msgDiv = document.createElement('div');
-            const currentAvatar = document.getElementById('headerAvatar').src;
-            
-            if(isUser) {
-                msgDiv.className = "flex items-end justify-end space-x-2 self-end max-w-[82%]";
-                msgDiv.innerHTML = `
-                    <div class="bg-blue-600 text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed shadow-sm">
-                        ${escapeHtml(text)}
-                    </div>
-                `;
-            } else {
-                msgDiv.className = "flex items-end space-x-2 max-w-[82%] group";
-                msgDiv.innerHTML = `
-                    <img src="${currentAvatar}" class="w-7 h-7 rounded-full object-cover shrink-0 mb-1" alt="Rosie">
-                    <div class="relative">
-                        <div class="bg-slate-100 text-slate-900 rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed shadow-xs">
-                            ${escapeHtml(text)}
-                        </div>
-                        <button onclick="toggleLike(this)" class="absolute -right-7 bottom-1 text-slate-400 hover:text-red-500 transition text-sm">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-                    </div>
-                `;
-            }
-            chatContainer.appendChild(msgDiv);
-        }
-
-        function sendHeart() {
-            appendMessage("💙", 'user');
-            scrollToBottom();
-            setTimeout(() => {
-                appendMessage("💙", 'ai');
-                scrollToBottom();
-            }, 800);
-        }
-
-        function toggleLike(btn) {
-            const icon = btn.querySelector('i');
-            if(icon.classList.contains('fa-regular')) {
-                icon.classList.remove('fa-regular', 'fa-heart');
-                icon.classList.add('fa-solid', 'fa-heart', 'text-red-500');
-            } else {
-                icon.classList.remove('fa-solid', 'fa-heart', 'text-red-500');
-                icon.classList.add('fa-regular', 'fa-heart');
-            }
-        }
-
-        function getAiResponse(input) {
-            const lower = input.toLowerCase();
-            if(lower.includes('hello') || lower.includes('hi')) return "Hey there! How's it going? ✨";
-            if(lower.includes('idea') || lower.includes('project')) return "That sounds super exciting! Let's build a roadmap or brainstorm catchy angles for it. 🚀";
-            return "That's really interesting! Tell me more about what you're thinking. 💡";
-        }
-
-        function scrollToBottom() {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function openProfileInfo() {
-            document.getElementById('profileModal').style.transform = 'translateX(0)';
-        }
-
-        function closeProfileInfo() {
-            document.getElementById('profileModal').style.transform = 'translateX(100%)';
-        }
-
-        function updateAvatar() {
-            const url = document.getElementById('customAvatarUrl').value.trim();
-            if(url) {
-                const allAvatars = document.querySelectorAll('.avatarImg');
-                allAvatars.forEach(img => img.src = url);
-                alert("Avatar updated successfully!");
-            }
-        }
-
-        function goBack() {
-            if(confirm("Go back to dashboard?")) {
-                window.location.reload();
-            }
-        }
-
-        function escapeHtml(text) {
-            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-    </script>
+  <script type="module" src="./app.js"></script>
 </body>
-    </html>
-                
+</html>
